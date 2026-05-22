@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+  content="width=device-width, initial-scale=1.0">
+
+  <title> Car Price Prediction</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+
+      background:
+      linear-gradient(rgba(5,10,30,0.92),
+      rgba(5,15,40,0.95)),
+      url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1600');
+
+      background-size:cover;
+      background-position:center;
+      background-attachment:fixed;
+
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:25px;
+      color:white;
+    }
+
+    .main-container{
+
+      width:1450px;
+      min-height:950px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(16px);
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow:0 20px 50px rgba(0,0,0,0.7);
+
+    }
+
+    /* HEADER */
+
+    .top-header{
+
+      text-align:center;
+      padding:25px;
+      background:rgba(255,255,255,0.05);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+
+    }
+
+    .top-header img{
+
+      width:500px;
+      height:200px;
+      border-radius:18px;
+      object-fit:cover;
+      border:5px solid white;
+      margin-bottom:20px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.5);
+
+    }
+
+    .top-header h1{
+
+      font-size:42px;
+      color:#ffd369;
+      letter-spacing:3px;
+      text-shadow:2px 2px 10px black;
+
+    }
+
+    /* CONTENT */
+
+    .content{
+
+      display:flex;
+
+    }
+
+    /* LEFT SIDE */
+
+    .left-section{
+
+      width:350px;
+      background:rgba(0,0,0,0.35);
+      padding:40px 25px;
+      text-align:center;
+      border-right:1px solid rgba(255,255,255,0.1);
+
+    }
+
+
+    .left-section img{
+      width:300px;
+        height:380px;
+        border-radius:25px;
+        object-fit:cover;
+        border:5px solid white;
+        margin-bottom:30px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.7);
+
+    }
+
+    .left-section h2{
+
+      font-size:30px;
+      margin-bottom:12px;
+
+    }
+
+    .designation{
+
+      color:#00ffcc;
+      font-size:20px;
+      margin-bottom:10px;
+      font-weight:bold;
+
+    }
+
+    .designation2{
+
+      color:#ffd369;
+      font-size:18px;
+      margin-bottom:25px;
+      font-weight:bold;
+
+    }
+
+    .email{
+
+      font-size:18px;
+      background:rgba(255,255,255,0.08);
+      padding:12px;
+      border-radius:10px;
+
+    }
+
+    /* CENTER SECTION */
+
+    .center-section{
+
+      flex:1;
+      padding:40px;
+
+    }
+
+    .form-box{
+
+      background:rgba(255,255,255,0.06);
+      border-radius:20px;
+      padding:35px;
+
+    }
+
+    .form-box h2{
+
+      text-align:center;
+      font-size:40px;
+      margin-bottom:35px;
+
+    }
+
+    .input-grid{
+
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:22px;
+
+    }
+
+    .input-group label{
+
+      display:block;
+      margin-bottom:8px;
+      font-size:17px;
+      font-weight:bold;
+
+    }
+
+    .input-group input,
+    .input-group select{
+
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:12px;
+      font-size:16px;
+      outline:none;
+      background:rgba(255,255,255,0.92);
+
+    }
+
+    button{
+
+      width:100%;
+      padding:18px;
+      margin-top:35px;
+      border:none;
+      border-radius:14px;
+      font-size:22px;
+      font-weight:bold;
+      cursor:pointer;
+      background:linear-gradient(to right,#ffd369,#ffb703);
+      transition:0.4s;
+
+    }
+
+    button:hover{
+
+      transform:scale(1.02);
+      background:white;
+
+    }
+
+    /* RESULT */
+
+    .result-box{
+
+      margin-top:40px;
+      text-align:center;
+      display:none;
+      animation:fadeIn 1s ease;
+
+    }
+
+    .result-box img{
+
+      width:100%;
+      max-width:560px;
+      height:320px;
+      object-fit:cover;
+      border-radius:20px;
+      margin-bottom:20px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.6);
+
+    }
+
+    .car-name{
+
+      font-size:38px;
+      font-weight:bold;
+      margin-bottom:12px;
+
+    }
+
+    .car-price{
+
+      font-size:45px;
+      color:#00ffb3;
+      font-weight:bold;
+      margin-bottom:15px;
+
+    }
+
+    .extra-details{
+
+      font-size:20px;
+      color:#ffd369;
+      font-weight:bold;
+      margin-top:10px;
+
+    }
+
+    @keyframes fadeIn{
+
+      from{
+        opacity:0;
+        transform:translateY(20px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+
+    }
+
+    @media(max-width:1100px){
+
+      .content{
+        flex-direction:column;
+      }
+
+      .left-section{
+        width:100%;
+      }
+
+      .input-grid{
+        grid-template-columns:1fr;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="main-container">
+
+    <!-- HEADER -->
+
+    <div class="top-header">
+
+      <!-- COMPANY LOGO -->
+
+      <!-- KEEP YOUR COMPANY PHOTO INSIDE static FOLDER -->
+
+      <!-- Example:
+      static/companylogo.png
+      -->
+
+      <img src="static/Viharatech.jpeg"
+      alt="Viharatech.jpeg">
+
+
+    </div>
+
+    <div class="content">
+
+      <!-- LEFT SIDE -->
+
+      <div class="left-section">
+
+        <!-- YOUR PHOTO -->
+
+        <!-- KEEP YOUR PHOTO INSIDE static FOLDER -->
+
+        <!-- Example:
+        static/myphoto.jpg
+        -->
+
+        <img src="static/vishnu.jpeg"
+        alt="vishnu.jpeg">
+
+        <h2>Nimmala Vishnu</h2>
+
+        <div class="designation">
+
+          Data Analyst
+
+        </div>
+
+        <div class="designation2">
+
+          Machine Learning Engineer
+
+        </div>
+
+        <div class="email">
+
+          📧 nimmalavishnu602@gmail.com
+
+        </div>
+
+      </div>
+
+      <!-- CENTER SECTION -->
+
+      <div class="center-section">
+
+        <div class="form-box">
+
+          <h2>Dynamic Car Price Prediction</h2>
+
+          <div class="input-grid">
+
+            <!-- BRAND -->
+
+            <div class="input-group">
+
+              <label>Brand</label>
+
+              <select id="brand">
+
+                <option value="">Select Brand</option>
+
+                <option>Toyota</option>
+                <option>BMW</option>
+                <option>Audi</option>
+                <option>Hyundai</option>
+                <option>Honda</option>
+                <option>Mercedes</option>
+                <option>Mahindra</option>
+                <option>Tata</option>
+                <option>Kia</option>
+                <option>Ford</option>
+                <option>Volkswagen</option>
+                <option>Skoda</option>
+                <option>Tesla</option>
+                <option>MG</option>
+                <option>Nissan</option>
+                <option>Renault</option>
+
+              </select>
+
+            </div>
+
+            <!-- SERIES -->
+
+            <div class="input-group">
+
+              <label>Series</label>
+
+              <select id="series">
+
+                <option value="">Select Series</option>
+
+                <option>Standard</option>
+                <option>X Series</option>
+                <option>S Series</option>
+                <option>M Series</option>
+                <option>Sport Series</option>
+                <option>Luxury Series</option>
+                <option>Electric Series</option>
+
+              </select>
+
+            </div>
+
+            <!-- CONDITION -->
+
+            <div class="input-group">
+
+              <label>Condition</label>
+
+              <select id="condition">
+
+                <option value="">Select Condition</option>
+
+                <option>New</option>
+                <option>Old</option>
+
+              </select>
+
+            </div>
+
+            <!-- MILEAGE -->
+
+            <div class="input-group">
+
+              <label>Mileage (KM)</label>
+
+              <input type="number"
+              id="mileage"
+              placeholder="Enter Mileage">
+
+            </div>
+
+            <!-- YEAR -->
+
+            <div class="input-group">
+
+              <label>Year</label>
+
+              <input type="number"
+              id="year"
+              placeholder="Enter Year">
+
+            </div>
+
+            <!-- ENGINE -->
+
+            <div class="input-group">
+
+              <label>Engine Size (CC)</label>
+
+              <input type="number"
+              id="engine"
+              placeholder="Enter Engine Size">
+
+            </div>
+
+            <!-- FUEL -->
+
+            <div class="input-group">
+
+              <label>Fuel Type</label>
+
+              <select id="fuel">
+
+                <option value="">Select Fuel Type</option>
+
+                <option>Petrol</option>
+                <option>Diesel</option>
+                <option>Electric</option>
+                <option>Hybrid</option>
+
+              </select>
+
+            </div>
+
+            <!-- TRANSMISSION -->
+
+            <div class="input-group">
+
+              <label>Transmission</label>
+
+              <select id="transmission">
+
+                <option value="">Select Transmission</option>
+
+                <option>Automatic</option>
+                <option>Manual</option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+          <!-- BUTTON -->
+
+          <button onclick="showCarDetails()">
+
+            Predict Price
+
+          </button>
+
+          <!-- RESULT -->
+
+          <div class="result-box" id="resultBox">
+
+            <img id="carImage" src="">
+
+            <div class="car-name" id="carName"></div>
+
+            <div class="car-price" id="carPrice"></div>
+
+            <div class="extra-details"
+            id="extraDetails"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function showCarDetails(){
+
+      let brand =
+      document.getElementById("brand").value;
+
+      let series =
+      document.getElementById("series").value;
+
+      let condition =
+      document.getElementById("condition").value;
+
+      let mileage =
+      parseInt(document.getElementById("mileage").value) || 0;
+
+      let year =
+      parseInt(document.getElementById("year").value) || 2020;
+
+      let engine =
+      parseInt(document.getElementById("engine").value) || 1000;
+
+      let fuel =
+      document.getElementById("fuel").value;
+
+      let transmission =
+      document.getElementById("transmission").value;
+
+      let resultBox =
+      document.getElementById("resultBox");
+
+      let image =
+      document.getElementById("carImage");
+
+      let name =
+      document.getElementById("carName");
+
+      let priceText =
+      document.getElementById("carPrice");
+
+      let extra =
+      document.getElementById("extraDetails");
+
+      if(brand === ""){
+
+        alert("Please Select Brand");
+
+        return;
+
+      }
+
+      resultBox.style.display = "block";
+
+      /* BASE PRICES */
+
+      const basePrices = {
+
+        Toyota:850000,
+        BMW:4500000,
+        Audi:5200000,
+        Hyundai:1250000,
+        Honda:1000000,
+        Mercedes:6500000,
+        Mahindra:1800000,
+        Tata:1400000,
+        Kia:1600000,
+        Ford:2000000,
+        Volkswagen:2200000,
+        Skoda:2100000,
+        Tesla:7500000,
+        MG:1900000,
+        Nissan:1500000,
+        Renault:1100000
+
+      };
+
+      /* CAR IMAGES */
+
+      const carImages = {
+
+        Toyota:"https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?q=80&w=1200",
+
+        BMW:"https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1200",
+
+        Audi:"https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?q=80&w=1200",
+
+        Hyundai:"https://images.unsplash.com/photo-1619767886558-efdc259cde1a?q=80&w=1200",
+
+        Honda:"https://images.unsplash.com/photo-1619976215249-8f4a0d2e5d7f?q=80&w=1200",
+
+        Mercedes:"https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1200",
+
+        Mahindra:"https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1200",
+
+        Tata:"https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=1200",
+
+        Kia:"https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1200",
+
+        Ford:"https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1200",
+
+        Volkswagen:"https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?q=80&w=1200",
+
+        Skoda:"https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1200",
+
+        Tesla:"https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=1200",
+
+        MG:"https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=1200",
+
+        Nissan:"https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200",
+
+        Renault:"https://images.unsplash.com/photo-1489824904134-891ab64532f1?q=80&w=1200"
+
+      };
+
+      let finalPrice = basePrices[brand];
+
+      /* YEAR */
+
+      if(year >= 2024){
+
+        finalPrice += 500000;
+
+      }
+
+      else if(year <= 2018){
+
+        finalPrice -= 300000;
+
+      }
+
+      /* CONDITION */
+
+      if(condition === "New"){
+
+        finalPrice += 400000;
+
+      }
+
+      else{
+
+        finalPrice -= 250000;
+
+      }
+
+      /* ENGINE */
+
+      if(engine > 2000){
+
+        finalPrice += 300000;
+
+      }
+
+      else if(engine < 1200){
+
+        finalPrice -= 100000;
+
+      }
+
+      /* MILEAGE */
+
+      if(mileage > 80000){
+
+        finalPrice -= 200000;
+
+      }
+
+      else if(mileage < 20000){
+
+        finalPrice += 150000;
+
+      }
+
+      /* SERIES */
+
+      if(series === "Luxury Series"){
+
+        finalPrice += 500000;
+
+      }
+
+      else if(series === "Sport Series"){
+
+        finalPrice += 350000;
+
+      }
+
+      else if(series === "Electric Series"){
+
+        finalPrice += 450000;
+
+      }
+
+      /* FUEL */
+
+      if(fuel === "Electric"){
+
+        finalPrice += 400000;
+
+      }
+
+      else if(fuel === "Hybrid"){
+
+        finalPrice += 250000;
+
+      }
+
+      /* TRANSMISSION */
+
+      if(transmission === "Automatic"){
+
+        finalPrice += 150000;
+
+      }
+
+      /* SHOW RESULT */
+
+      image.src = carImages[brand];
+
+      name.innerHTML =
+      brand + " " + series;
+
+      priceText.innerHTML =
+      "₹ " +
+      finalPrice.toLocaleString('en-IN');
+
+      extra.innerHTML =
+
+      "Condition : " + condition +
+
+      " | Fuel : " + fuel +
+
+      " | Transmission : " + transmission;
+
+    }
+
+  </script>
+
+</body>
+
+</html>
