@@ -1,518 +1,322 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Price Prediction README</title>
+# 🚗 Car Price Prediction System
+
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![Flask](https://img.shields.io/badge/Flask-Web%20App-lightgrey)
+![ML](https://img.shields.io/badge/Machine%20Learning-Linear%20Regression-green)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
+
+---
+
+## 📌 What is This Project?
+
+This project is a **Car Price Prediction System** — a web application built using **Machine Learning** and **Flask**.
+
+When a user visits the website, they fill in details about a car like:
+- Which brand it is (Tesla, BMW, Toyota, etc.)
+- What year it was made
+- How big the engine is
+- Whether it runs on Petrol or Diesel
+- Whether it has Manual or Automatic transmission
+- How many kilometres it has been driven (Mileage)
+- What condition it is in (New / Used / Like New)
+- What model it is (Model X, Mustang, Innova, etc.)
+
+After filling all these details and clicking **Predict Price**, the system uses a trained Machine Learning model to calculate and display the **estimated price of the car**.
+
+This is very useful for:
+- A **buyer** who wants to know if a car price is fair
+- A **seller** who wants to set a reasonable price
+- A **dealer** who wants to quickly estimate car values
+
+---
+
+## 🎯 Why Did I Build This Project?
+
+I built this project because:
+- I wanted to learn how Machine Learning works on real data
+- I wanted to connect a Python ML model with a website using Flask
+- I wanted to understand how different car features like year, mileage, and brand affect the final price
+- I wanted to build a complete project from collecting data, training a model, building a website, and deploying it live
+- This project helps me grow as a **Data Analyst and ML Engineer**
+
+---
+
+## 🛠️ Tools and Technologies Used
+
+| Tool / Technology | What It Does In This Project |
+|---|---|
+| **Python** | Main programming language used for everything |
+| **Pandas** | Used to load the dataset and clean the data |
+| **NumPy** | Used for numerical operations and array handling |
+| **Scikit-learn** | Used to build and train the Machine Learning model |
+| **Matplotlib** | Used to draw graphs and charts during analysis |
+| **Seaborn** | Used to make the graphs look better and colorful |
+| **Flask** | Used to build the website that runs the ML model |
+| **HTML & CSS** | Used to design the front page of the website |
+| **Jinja2** | Used to pass ML results from Python into the HTML page |
+| **Joblib** | Used to save the trained model and load it later |
+| **GitHub** | Used to store and share the project code |
+| **Render** | Used to deploy the project live on the internet |
+| **VS Code** | Code editor used to write all the code |
 
-  <style>
+---
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial, Helvetica, sans-serif;
-    }
+## 📊 Dataset — What Data Did I Use?
 
-    body{
+The dataset contains information about different cars. Each row represents one car with these columns:
+
+| Column Name | What It Means | Example |
+|---|---|---|
+| **Brand** | The company that made the car | Tesla, BMW, Toyota |
+| **Year** | The year the car was manufactured | 2018, 2020, 2022 |
+| **Engine Size** | Size of the car engine in litres | 1.5, 2.0, 3.5 |
+| **Fuel Type** | Type of fuel the car uses | Petrol, Diesel |
+| **Transmission** | How the car changes gears | Manual, Automatic |
+| **Mileage** | Total kilometres driven so far | 15000, 45000, 90000 |
+| **Condition** | Current state of the car | New, Used, Like New |
+| **Model** | Specific model name of the car | Model X, Innova, Mustang |
+| **Price** | The actual price of the car — this is what we predict | ₹ 5,00,000 |
+
+---
+
+## 🧮 Manual Calculations (Step by Step)
+
+### 📍 Step 1 — Label Encoding (Converting Text to Numbers)
+
+Machine Learning models cannot understand text like "BMW" or "Petrol". So we convert all text values into numbers. This is called **Label Encoding**.
+
+| Brand | Number |
+|---|---|
+| Tesla | 0 |
+| BMW | 1 |
+| Audi | 2 |
+| Ford | 3 |
+| Honda | 4 |
+| Mercedes | 5 |
+| Toyota | 6 |
+
+| Fuel Type | Number |
+|---|---|
+| Petrol | 0 |
+| Diesel | 1 |
 
-      background:
-      linear-gradient(rgba(5,10,30,0.95),
-      rgba(5,15,40,0.95)),
-      url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=1600');
+| Transmission | Number |
+|---|---|
+| Manual | 0 |
+| Automatic | 1 |
 
-      background-size:cover;
-      background-position:center;
-      background-attachment:fixed;
+| Condition | Number |
+|---|---|
+| New | 0 |
+| Used | 1 |
+| Like New | 2 |
 
-      color:white;
-      padding:40px;
-    }
+| Model | Number |
+|---|---|
+| Model X | 0 |
+| 5 Series | 1 |
+| A4 | 2 |
+| Mustang | 3 |
+| City | 4 |
+| C Class | 5 |
+| Innova | 6 |
 
-    .container{
+---
 
-      width:95%;
-      max-width:1400px;
-      margin:auto;
+### 📍 Step 2 — Multiple Linear Regression Formula
 
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(15px);
+Linear Regression is a method where the model learns a mathematical formula to predict price based on input values.
 
-      border-radius:25px;
-      padding:50px;
+The formula is:
 
-      box-shadow:0 20px 60px rgba(0,0,0,0.7);
+Price = b0 + b1×Brand + b2×Year + b3×Engine + b4×Fuel + b5×Transmission + b6×Mileage + b7×Condition + b8×Model
 
-    }
+What each part means:
+- b0 = Base price (starting value before any features)
+- b1 to b8 = Coefficients — weights the model learned from training data
+- Each coefficient tells how much that feature increases or decreases the price
+- Example: if b2 = 200 for Year — every 1 year newer adds ₹200 to the price
+- Example: if b6 = -0.05 for Mileage — every 1 km driven reduces price by ₹0.05
 
-    h1{
+---
 
-      text-align:center;
-      font-size:55px;
-      color:#ffd369;
-      margin-bottom:20px;
-      text-shadow:2px 2px 10px black;
+### 📍 Step 3 — How the Model Trains
 
-    }
+During training:
+1. The model sees hundreds of rows of car data
+2. It tries to find the best values for b0, b1, b2 ... b8
+3. It checks how close its predictions are to actual prices
+4. It adjusts the coefficients again and again until predictions are accurate
+5. The error is measured using Mean Squared Error (MSE):
 
-    h2{
+MSE = (1/n) × Σ (Actual Price - Predicted Price)²
 
-      color:#00ffcc;
-      margin-top:45px;
-      margin-bottom:20px;
-      font-size:34px;
+The model tries to make this MSE as small as possible.
 
-    }
+---
 
-    h3{
+### 📍 Step 4 — Manual Calculation Example
 
-      color:#ffd369;
-      margin-top:30px;
-      margin-bottom:15px;
-      font-size:26px;
+Input from user:
 
-    }
+Brand        = BMW        → encoded = 1
+Year         = 2020
+Engine Size  = 2.0
+Fuel Type    = Diesel     → encoded = 1
+Transmission = Automatic  → encoded = 1
+Mileage      = 30000
+Condition    = Used       → encoded = 1
+Model        = 5 Series   → encoded = 1
 
-    p{
+Model coefficients (example values):
 
-      font-size:19px;
-      line-height:1.9;
-      margin-bottom:20px;
+b0  =  5000   (base price)
+b1  =  3000   (Brand)
+b2  =  200    (Year)
+b3  =  1500   (Engine Size)
+b4  =  500    (Fuel Type)
+b5  =  1000   (Transmission)
+b6  = -0.05   (Mileage — negative means more km = lower price)
+b7  = -2000   (Condition — Used = lower price)
+b8  =  1200   (Model)
 
-    }
+Applying the formula:
 
-    ul{
+Price = 5000
+      + (3000  × 1)      =  3000    → BMW brand
+      + (200   × 2020)   =  404000  → Year 2020
+      + (1500  × 2.0)    =  3000    → Engine 2.0L
+      + (500   × 1)      =  500     → Diesel
+      + (1000  × 1)      =  1000    → Automatic
+      + (-0.05 × 30000)  = -1500    → 30000 km driven
+      + (-2000 × 1)      = -2000    → Used condition
+      + (1200  × 1)      =  1200    → 5 Series model
 
-      margin-left:30px;
-      margin-bottom:25px;
+Price = 5000 + 3000 + 404000 + 3000 + 500 + 1000 - 1500 - 2000 + 1200
 
-    }
+Price = ₹ 4,15,200 (approximately)
 
-    ul li{
+> ✅ In real code, scikit-learn automatically finds the best coefficients. We do not set them manually.
 
-      margin-bottom:12px;
-      font-size:18px;
+---
 
-    }
+### 📍 Step 5 — Train Test Split
 
-    table{
+Before training we split the dataset into two parts:
 
-      width:100%;
-      border-collapse:collapse;
-      margin-top:20px;
-      margin-bottom:35px;
+Total Dataset  →  100%
+Training Data  →   80%  ← Model learns from this
+Testing Data   →   20%  ← Model is tested on unseen data
 
-    }
+Why do we split?
+- If we train and test on the same data the model will just memorize it
+- Testing on unseen data tells us how well the model works in real life
+- This is called checking for Overfitting
 
-    table th,
-    table td{
+---
 
-      border:1px solid rgba(255,255,255,0.2);
-      padding:15px;
-      text-align:left;
-      font-size:17px;
+### 📍 Step 6 — Model Accuracy Metrics
 
-    }
+R² Score:
+R² = 1 - (SS_residual / SS_total)
+Value between 0 and 1. Closer to 1 means the model is very accurate.
+Example: R² = 0.92 means model explains 92% of price variation.
 
-    table th{
+Mean Absolute Error (MAE):
+MAE = Average of |Actual Price - Predicted Price|
+Average difference between actual and predicted price. Lower is better.
 
-      background:#ffd369;
-      color:black;
+Mean Squared Error (MSE):
+MSE = Average of (Actual Price - Predicted Price)²
+Penalizes large errors more. Lower is better.
 
-    }
+Root Mean Squared Error (RMSE):
+RMSE = √MSE
+Same unit as price so easier to understand. Lower is better.
 
-    table tr:nth-child(even){
+---
 
-      background:rgba(255,255,255,0.05);
+## 📈 Visualizations — Graphs Plotted
 
-    }
+### 1. 📊 Brand vs Average Price (Bar Chart)
+- X-axis: Car Brand
+- Y-axis: Average Price
+- Finding: Tesla and Mercedes have the highest average prices. Honda and Toyota are more affordable.
 
-    .code{
+### 2. 📉 Mileage vs Price (Scatter Plot)
+- X-axis: Mileage (km driven)
+- Y-axis: Car Price
+- Finding: As mileage increases price goes down — negative correlation. More km driven means more wear and tear so lower price.
 
-      background:black;
-      padding:20px;
-      border-radius:15px;
-      overflow-x:auto;
-      margin-bottom:30px;
-      color:#00ffcc;
-      font-size:17px;
-      line-height:1.8;
+### 3. 📈 Year vs Price (Scatter Plot)
+- X-axis: Year of Manufacture
+- Y-axis: Car Price
+- Finding: Newer cars have higher prices — positive correlation.
 
-    }
+### 4. 🥧 Fuel Type Distribution (Pie Chart)
+- Shows what percentage of cars use Petrol vs Diesel
+- Finding: Most cars in the dataset are Petrol-powered.
 
-    .badge{
+### 5. 🌡️ Correlation Heatmap
+- Shows how strongly each feature is connected to Price
+- Finding: Year and Engine Size have the strongest positive connection with Price. Mileage has a negative connection.
 
-      display:inline-block;
-      background:#00ffcc;
-      color:black;
-      padding:10px 18px;
-      border-radius:25px;
-      margin:10px;
-      font-weight:bold;
-      font-size:16px;
+### 6. 🎯 Actual vs Predicted Price (Scatter Plot)
+- X-axis: Actual Price
+- Y-axis: Predicted Price by Model
+- Finding: Most points are close to the diagonal line which means model predictions are very close to real prices.
 
-    }
+---
 
-    .footer{
+## 🚀 How to Run This Project on Your Computer
 
-      text-align:center;
-      margin-top:60px;
-      font-size:22px;
-      color:#ffd369;
+**Step 1 — Download the project**
+git clone https://github.com/yourusername/car-price-prediction.git
+cd car-price-prediction
 
-    }
+**Step 2 — Install all required libraries**
+pip install -r requirements.txt
 
-    a{
+**Step 3 — Train the Machine Learning model**
+python model.py
+This creates a file called car_model.pkl which is the saved trained model.
 
-      color:#00ffcc;
-      text-decoration:none;
+**Step 4 — Start the Flask web application**
+python app.py
 
-    }
+**Step 5 — Open the website in your browser**
+http://127.0.0.1:5000
+You will see the Car Price Prediction form. Fill in the details and click Predict Price!
 
-    a:hover{
+---
 
-      text-decoration:underline;
-
-    }
-
-    @media(max-width:768px){
-
-      h1{
-        font-size:38px;
-      }
-
-      h2{
-        font-size:28px;
-      }
-
-      p,li{
-        font-size:16px;
-      }
-
-    }
-
-  </style>
-
-</head>
-
-<body>
-
-  <div class="container">
-
-    <h1>🚗 Car Price Prediction System</h1>
-
-    <center>
-
-      <span class="badge">Python 3.10</span>
-      <span class="badge">Flask Web App</span>
-      <span class="badge">Machine Learning</span>
-      <span class="badge">Linear Regression</span>
-      <span class="badge">Completed Project</span>
-
-    </center>
-
-    <h2>📌 What is This Project?</h2>
-
-    <p>
-      This project is a professional Car Price Prediction System developed using
-      Machine Learning and Flask. Users can enter car details such as brand,
-      year, engine size, fuel type, transmission, mileage, condition, and model.
-      The system predicts the estimated car price using a trained Machine Learning model.
-    </p>
-
-    <ul>
-
-      <li>Predicts estimated car price instantly</li>
-      <li>Useful for buyers, sellers, and dealers</li>
-      <li>Built using Machine Learning and Flask</li>
-      <li>Frontend developed using HTML and CSS</li>
-
-    </ul>
-
-    <h2>🎯 Why Did I Build This Project?</h2>
-
-    <ul>
-
-      <li>To learn real-world Machine Learning implementation</li>
-      <li>To connect ML models with Flask websites</li>
-      <li>To understand how vehicle features affect car prices</li>
-      <li>To improve my Data Analytics and ML Engineering skills</li>
-
-    </ul>
-
-    <h2>🛠️ Tools and Technologies Used</h2>
-
-    <table>
-
-      <tr>
-        <th>Technology</th>
-        <th>Purpose</th>
-      </tr>
-
-      <tr>
-        <td>Python</td>
-        <td>Main programming language</td>
-      </tr>
-
-      <tr>
-        <td>Pandas</td>
-        <td>Data preprocessing and analysis</td>
-      </tr>
-
-      <tr>
-        <td>NumPy</td>
-        <td>Numerical operations</td>
-      </tr>
-
-      <tr>
-        <td>Scikit-learn</td>
-        <td>Machine Learning model building</td>
-      </tr>
-
-      <tr>
-        <td>Matplotlib</td>
-        <td>Data visualization</td>
-      </tr>
-
-      <tr>
-        <td>Seaborn</td>
-        <td>Advanced graph styling</td>
-      </tr>
-
-      <tr>
-        <td>Flask</td>
-        <td>Web application framework</td>
-      </tr>
-
-      <tr>
-        <td>HTML & CSS</td>
-        <td>Frontend design</td>
-      </tr>
-
-      <tr>
-        <td>Joblib</td>
-        <td>Model saving/loading</td>
-      </tr>
-
-      <tr>
-        <td>GitHub</td>
-        <td>Version control</td>
-      </tr>
-
-      <tr>
-        <td>Render</td>
-        <td>Project deployment</td>
-      </tr>
-
-    </table>
-
-    <h2>📊 Dataset Features</h2>
-
-    <table>
-
-      <tr>
-        <th>Feature</th>
-        <th>Description</th>
-      </tr>
-
-      <tr>
-        <td>Brand</td>
-        <td>Car company name</td>
-      </tr>
-
-      <tr>
-        <td>Year</td>
-        <td>Manufacturing year</td>
-      </tr>
-
-      <tr>
-        <td>Engine Size</td>
-        <td>Engine capacity</td>
-      </tr>
-
-      <tr>
-        <td>Fuel Type</td>
-        <td>Petrol/Diesel</td>
-      </tr>
-
-      <tr>
-        <td>Transmission</td>
-        <td>Manual/Automatic</td>
-      </tr>
-
-      <tr>
-        <td>Mileage</td>
-        <td>Total kilometers driven</td>
-      </tr>
-
-      <tr>
-        <td>Condition</td>
-        <td>New/Used/Like New</td>
-      </tr>
-
-      <tr>
-        <td>Model</td>
-        <td>Specific model name</td>
-      </tr>
-
-      <tr>
-        <td>Price</td>
-        <td>Target variable</td>
-      </tr>
-
-    </table>
-
-    <h2>🧮 Machine Learning Workflow</h2>
-
-    <h3>📍 Step 1 — Data Preprocessing</h3>
-
-    <p>
-      Text data like car brands and fuel types are converted into numerical values
-      using Label Encoding because Machine Learning models cannot understand text directly.
-    </p>
-
-    <h3>📍 Step 2 — Multiple Linear Regression</h3>
-
-    <p>
-      The model learns relationships between car features and price using
-      the Multiple Linear Regression formula.
-    </p>
-
-    <div class="code">
-
-      Price = b0 + b1×Brand + b2×Year + b3×Engine Size + b4×Fuel Type
-      + b5×Transmission + b6×Mileage + b7×Condition + b8×Model
-
-    </div>
-
-    <h3>📍 Step 3 — Model Training</h3>
-
-    <p>
-      The Machine Learning model is trained using historical car data.
-      The algorithm continuously adjusts coefficients to minimize prediction error.
-    </p>
-
-    <h3>📍 Step 4 — Train Test Split</h3>
-
-    <div class="code">
-
-      Training Data → 80%  
-      Testing Data  → 20%
-
-    </div>
-
-    <p>
-      This ensures the model performs well on unseen real-world data.
-    </p>
-
-    <h2>📈 Evaluation Metrics</h2>
-
-    <table>
-
-      <tr>
-        <th>Metric</th>
-        <th>Purpose</th>
-      </tr>
-
-      <tr>
-        <td>R² Score</td>
-        <td>Measures model accuracy</td>
-      </tr>
-
-      <tr>
-        <td>MAE</td>
-        <td>Average prediction error</td>
-      </tr>
-
-      <tr>
-        <td>MSE</td>
-        <td>Squared prediction error</td>
-      </tr>
-
-      <tr>
-        <td>RMSE</td>
-        <td>Root Mean Squared Error</td>
-      </tr>
-
-    </table>
-
-    <h2>📈 Visualizations</h2>
-
-    <ul>
-
-      <li>Brand vs Average Price</li>
-      <li>Mileage vs Price</li>
-      <li>Year vs Price</li>
-      <li>Fuel Type Distribution</li>
-      <li>Correlation Heatmap</li>
-      <li>Actual vs Predicted Price</li>
-
-    </ul>
-
-    <h2>🚀 How to Run This Project</h2>
-
-    <h3>Step 1 — Clone Repository</h3>
-
-    <div class="code">
-
-      git clone https://github.com/yourusername/car-price-prediction.git
-
-    </div>
-
-    <h3>Step 2 — Install Libraries</h3>
-
-    <div class="code">
-
-      pip install -r requirements.txt
-
-    </div>
-
-    <h3>Step 3 — Train Model</h3>
-
-    <div class="code">
-
-      python model.py
-
-    </div>
-
-    <h3>Step 4 — Run Flask App</h3>
-
-    <div class="code">
-
-      python app.py
-
-    </div>
-
-    <h3>Step 5 — Open Browser</h3>
-
-    <div class="code">
-
-      http://127.0.0.1:5000
-
-    </div>
-
-    <h2>📁 Project Folder Structure</h2>
-
-    <div class="code">
+## 📁 Project Folder Structure
 
 car-price-prediction/
-
 │
-
-├── static/
+├── static/                        ← All images used in the website
+│   ├── vt image.jpeg              ← Vihara Tech company logo
+│   ├── Tesla-Motors-Model-S.jpg   ← Tesla car image shown in output
+│   ├── bmw-7-series-1.webp        ← BMW car image shown in output
+│   ├── audi-a4-1.webp             ← Audi car image shown in output
+│   ├── ford.avif                  ← Ford car image shown in output
+│   ├── honda.webp                 ← Honda car image shown in output
+│   ├── benz.avif                  ← Mercedes car image shown in output
+│   └── toyota.jpg                 ← Toyota car image shown in output
+│
 ├── templates/
-├── app.py
-├── model.py
-├── car_model.pkl
-├── requirements.txt
-├── Procfile
-└── README.md
+│   └── index.html                 ← The main webpage with form and output
+│
+├── app.py                         ← Flask app — connects website with ML model
+├── model.py                       ← Code to train and save the ML model
+├── car_model.pkl                  ← Saved trained ML model file
+├── requirements.txt               ← List of all Python libraries needed
+├── Procfile                       ← Tells Render how to run the app
+└── README.md                      ← This file you are reading now
 
-    </div>
+---
 
-    <h2>📦 Required Libraries</h2>
-
-    <div class="code">
+## 📦 Libraries to Install
 
 flask
 scikit-learn
@@ -523,51 +327,37 @@ seaborn
 joblib
 gunicorn
 
-    </div>
+Install all at once:
+pip install -r requirements.txt
 
-    <h2>🌐 Deployment</h2>
+---
 
-    <p>
-      This project is deployed using Render cloud platform.
-      The application is connected directly with GitHub for automatic deployment.
-    </p>
+## 🌐 How is This Project Deployed?
 
-    <div class="code">
+This project is hosted live on the internet using Render — a free cloud platform.
 
-Procfile:
+Steps followed to deploy:
+1. Pushed all code to GitHub
+2. Connected GitHub repository to Render
+3. Render reads the Procfile to know how to start the app
+4. The app runs live and anyone can access it from anywhere
 
-web: gunicorn app:app
+Deployment files used:
+- Procfile → web: gunicorn app:app
+- requirements.txt → installs all libraries on Render server
+- runtime.txt → tells Render which Python version to use
 
-    </div>
+---
 
-    <h2>🤝 Developed By</h2>
+## 🤝 Developed By
 
-    <p>
+**Nimmala Vishnu** 
 
-      <strong>Nimmala Vishnu</strong><br><br>
+💼 Role — Data Analyst and ML Engineer
 
-      💼 Data Analyst & Machine Learning Engineer<br><br>
+🏢 Training — Vihara Tech Private Limited
 
-      🏢 Training — Vihara Tech Private Limited<br><br>
+📧 Email — nimmalavishnu602@@gmail.com 
 
-      📧 Email — nimmalavishnu602@gmail.com<br><br>
+🌐 Live Demo — [Click Here to View the Application](https://car-price-prediction-eyp4.onrender.com)
 
-      🌐 Live Demo —
-      <a href="https://car-price-prediction-eyp4.onrender.com" target="_blank">
-
-        Click Here to View Application
-
-      </a>
-
-    </p>
-
-    <div class="footer">
-
-      ⭐ Thank You for Visiting My Project ⭐
-
-    </div>
-
-  </div>
-
-</body>
-</html>
