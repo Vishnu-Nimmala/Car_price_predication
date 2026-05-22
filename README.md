@@ -359,5 +359,6 @@ Deployment files used:
 
 📧 Email — nimmalavishnu602@@gmail.com 
 
-🌐 Live Demo — [Click Here to View the Application]((https://car-price-predication-jjoj.onrender.com))
+🌐 Live Demo — [Click Here to View the Application]
+[https://car-price-predication-jjoj.onrender.com]
 
